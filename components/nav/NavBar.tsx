@@ -5,8 +5,11 @@ import Link from "next/link";
 import logo from "../../data/logo.png";
 import { NavBarProps } from "./navBar.types";
 import { useCartStore } from "@/Storage/Cart";
+import { SheetCart } from "../sheet/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const NavBar = ({ text }: NavBarProps) => {
   const { items } = useCartStore();
+  const user = true;
   return (
     <>
       <header className="w-full flex items-center justify-center">
@@ -15,24 +18,35 @@ export const NavBar = ({ text }: NavBarProps) => {
           <Link href="#offers" className="hover:underline">
             Ofertas
           </Link>
-          <Link href="#menu" className="hover:underline">
-            Menu
-          </Link>
+          {user ? (
+            <Link href="#pedidos" className="hover:underline">
+              Mis pedidos
+            </Link>
+          ) : (
+            <Link href="#menu" className="hover:underline">
+              Menu
+            </Link>
+          )}
+
           <Image src={logo} alt="logo" width={84} height={84} />
           <Link href="#contact" className="hover:underline">
             Contactamos
           </Link>
-          <button className="px-4 py-2  rounded-full text-white hover:bg-white hover:text-orange-500 transition-colors bg-black">
-            Ingresar
-          </button>
-          <Link href={"/cart"} className="relative">
-            <ShoppingCart className="w-6 h-6" />
-            <span
-              className={`absolute -top-2 -right-2 bg-red-500 ${text} rounded-full w-5 h-5 flex items-center justify-center text-xs text-white`}
+          {user ? (
+            <Avatar className="cursor-pointer">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          ) : (
+            <Link
+              href={"/login"}
+              className="px-4 py-2  rounded-full text-white hover:bg-white hover:text-orange-500 transition-colors bg-black"
             >
-              {items.length}
-            </span>
-          </Link>
+              Ingresar
+            </Link>
+          )}
+
+          <SheetCart text={text} count={items.length} />
         </nav>
       </header>
     </>
